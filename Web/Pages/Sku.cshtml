@@ -1,0 +1,57 @@
+﻿@page "{sku}"
+@model SkuModel
+@{
+    ViewData["Title"] = Model.SKU;
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+            <a asp-page="./Index">Index</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">@Model.SKU</li>
+  </ol>
+</nav>
+
+<h1 class="display-4">Visar @ViewData["Title"]</h1>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Prices[0].MarketId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prices[0].UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prices[0].CurrencyCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prices[0].ValidPeriod)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Prices)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MarketId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CurrencyCode)
+                </td>
+                <td>
+                    @*
+                    @Html.DisplayFor(modelItem => item.ValidPeriod)
+                    *@
+                    @Html.DisplayTextFor(modelItem => item.ValidPeriod)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
