@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Shared.Extensions;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Shared
+﻿namespace Web.Support
 {
+    using Microsoft.EntityFrameworkCore;
+    using Web.Extensions;
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class Seeder
     {
         /// <see cref="DbContextOptionsBuilder.UseSeeding(Action{DbContext, bool})"/>

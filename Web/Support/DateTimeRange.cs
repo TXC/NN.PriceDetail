@@ -1,4 +1,4 @@
-﻿namespace Shared
+﻿namespace Web.Support
 {
     using System;
 

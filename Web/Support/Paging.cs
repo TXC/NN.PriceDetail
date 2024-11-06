@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Shared
+﻿namespace Web.Support
 {
+    using System;
+
     public struct Paging
     {
         public int Total { get; set; }

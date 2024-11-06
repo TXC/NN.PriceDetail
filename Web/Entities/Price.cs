@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shared;
+using Web.Support;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -66,6 +66,7 @@ namespace Web.Entities
         }
 
         public override string ToString()
-            => $"SKU: {SKU}, MarketId: {MarketId}, CurrencyCode: {CurrencyCode}, ValidFrom: {ValidFrom}, ValidUntil: {ValidUntil}, UnitPrice: {UnitPrice}";
+            => $"SKU: {SKU}, MarketId: {MarketId}, CurrencyCode: {CurrencyCode}," +
+               $" ValidFrom: {ValidFrom}, ValidUntil: {ValidUntil}, UnitPrice: {UnitPrice}";
     }
 }

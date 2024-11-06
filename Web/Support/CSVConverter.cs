@@ -1,13 +1,13 @@
-﻿using CsvHelper.Configuration;
-using CsvHelper;
-using CsvHelper.TypeConversion;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System;
-
-namespace Shared
+﻿namespace Web.Support
 {
-    public class CSVConverter
+    using CsvHelper.Configuration;
+    using CsvHelper;
+    using CsvHelper.TypeConversion;
+    using System.Globalization;
+    using System.Text.RegularExpressions;
+    using System;
+
+    public partial class CSVConverter
     {
 #nullable enable
         private static string ReplaceSeparators(string? text)
@@ -42,13 +42,12 @@ namespace Shared
                 if (text == "")
                     text = "0";
 
-                numeric = Convert.ToInt32(Regex.Match(text, @"-?\d+").Value);
+                numeric = Convert.ToInt32(IsNumericRegex().Match(text).Value);
             }
             catch (FormatException)
             {
                 // numeric = Convert.ToInt32(text, new CultureInfo("sv-SE"));
-                var floating = Convert.ToDecimal(text, new CultureInfo("en-US"));
-                numeric = (int)floating;
+                numeric = (int)Convert.ToDecimal(text, new CultureInfo("en-US"));
             }
             return numeric;
         }
@@ -67,7 +66,6 @@ namespace Shared
             }
             catch (FormatException)
             {
-                // numeric = Convert.ToInt32(text, new CultureInfo("sv-SE"));
                 numeric = Convert.ToDecimal(text, new CultureInfo("en-US"));
             }
             return numeric;
@@ -102,5 +100,8 @@ namespace Shared
                 return base.ConvertFromString(text, row, memberMapData);
             }
         }
+
+        [GeneratedRegex(@"-?\d+")]
+        private static partial Regex IsNumericRegex();
     }
 }

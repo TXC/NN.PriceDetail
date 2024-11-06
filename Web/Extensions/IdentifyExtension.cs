@@ -1,4 +1,4 @@
-﻿namespace Shared.Extensions
+﻿namespace Web.Extensions
 {
     using Microsoft.EntityFrameworkCore;
     using System.Threading.Tasks;

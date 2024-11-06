@@ -1,15 +1,13 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Shared;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Web.Data;
 using Web.Entities;
+using Web.Repositories;
+using Web.Support;
 
 namespace Web.Pages
 {
-    public class IndexModel(AppDbContext ctx) : PageModel
+    public class IndexModel(IPriceRepository repository) : PageModel
     {
         public IList<Price> Prices { get; set; }
         public Paging Pager { get; set; }
@@ -20,17 +18,10 @@ namespace Web.Pages
             int pageSize = 100;
             p ??= 1;
 
-            var skip = (p - 1) * pageSize;
-
-            var PriceQuery = ctx.Prices.OrderBy(x => x.Id);
-            int count = await PriceQuery.CountAsync();
-
+            int count = await repository.GetTotalAsync();
             Pager = Paging.Create(count, (int)p, pageSize);
 
-
-            Prices = await PriceQuery.Skip(Pager.Skip)
-                                     .Take(Pager.PageSize)
-                                     .ToListAsync();
+            Prices = await repository.GetPaginatedAsync(Pager);
         }
     }
 }

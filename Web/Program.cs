@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,7 @@ namespace Web
             builder.Services.AddDbContext<AppDbContext>(o
                 => o.UseSqlServer(AppConnectionString)
             );
-
+            builder.Services.AddScoped<Repositories.IPriceRepository, Repositories.PriceRepository>();
 
             var app = builder.Build();
 
