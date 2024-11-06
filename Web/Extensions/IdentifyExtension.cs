@@ -5,10 +5,20 @@
 
     public static class IdentifyExtension
     {
-        public static Task EnableIdentityInsert<T>(this DbContext context) => SetIdentityInsert<T>(context, enable: true);
-        public static Task DisableIdentityInsert<T>(this DbContext context) => SetIdentityInsert<T>(context, enable: false);
+        public static Task EnableIdentityInsert<T>(this DbContext context)
+            => SetIdentityInsert<T>(context, enable: true);
 
-        private static Task SetIdentityInsert<T>(DbContext context, bool enable)
+        public static Task DisableIdentityInsert<T>(this DbContext context)
+            => SetIdentityInsert<T>(context, enable: false);
+
+        /// <summary>
+        /// Enable/Disable Identity Insert
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="enable"></param>
+        /// <returns />
+        static Task SetIdentityInsert<T>(DbContext context, bool enable)
         {
             var entityType = context.Model.FindEntityType(typeof(T));
             var value = enable ? "ON" : "OFF";

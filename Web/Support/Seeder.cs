@@ -1,10 +1,10 @@
 ﻿namespace Web.Support
 {
     using Microsoft.EntityFrameworkCore;
-    using Web.Extensions;
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Web.Extensions;
 
     public class Seeder
     {
@@ -13,34 +13,22 @@
             where T : class => RunAsync<T>(ctx, stored, GetRows).GetAwaiter().GetResult();
 
         /// <see cref="DbContextOptionsBuilder.UseAsyncSeeding(Func{DbContext, bool, CancellationToken, Task})"/>
-        async public static Task RunAsync<T>(DbContext ctx, bool stored, Func<T[]> GetRows, CancellationToken token = default)
+        async public static Task RunAsync<T>(DbContext ctx, bool _, Func<T[]> GetRows, CancellationToken token = default)
             where T : class
         {
-            var res = await ctx.Set<T>()
-                                 .FirstOrDefaultAsync(token);
-            if (res is not null)
+            if (await ctx.Set<T>().AnyAsync(token))
             {
                 return;
             }
 
-            try
-            {
-                var entityType = ctx.Model.FindEntityType(typeof(T));
+            var result = GetRows.Invoke();
 
-                var result = GetRows.Invoke();
+            await ctx.Set<T>().AddRangeAsync(result, token);
+            await ctx.EnableIdentityInsert<T>();
 
-                await ctx.Set<T>().AddRangeAsync(result, token);
-                await ctx.EnableIdentityInsert<T>();
+            await ctx.SaveChangesAsync(token);
 
-                await ctx.SaveChangesAsync(token);
-
-                await ctx.DisableIdentityInsert<T>();
-            }
-            catch (Exception)
-            {
-                // If a failure occurred, we rollback to the savepoint and can continue the transaction
-                //transaction.RollbackToSavepoint("BeforeSeeding");
-            }
+            await ctx.DisableIdentityInsert<T>();
         }
     }
 }

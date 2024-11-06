@@ -9,13 +9,26 @@ using Web.Support;
 
 namespace Web.Repositories
 {
+    /// <summary>
+    /// Handle price table
+    /// </summary>
+    /// <param name="context"></param>
     public class PriceRepository(AppDbContext context) : IPriceRepository
     {
+        /// <summary>
+        /// Add new row
+        /// </summary>
+        /// <param name="price"></param>
+        /// <returns></returns>
         public Price Add(Price price)
         {
             return context.Prices.Add(price).Entity;
         }
 
+        /// <summary>
+        /// Get total number of rows
+        /// </summary>
+        /// <returns></returns>
         public async Task<int> GetTotalAsync()
         {
             var result = await context.Prices.OrderBy(x => x.Id)
@@ -23,6 +36,12 @@ namespace Web.Repositories
             return result;
         }
 
+        /// <summary>
+        /// Get a limited resultset based on <paramref name="page"/> and <paramref name="size"/>
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
         public async Task<IList<Price>> GetPaginatedAsync(int page, int size)
         {
             var skip = (page - 1) * size;
@@ -36,6 +55,11 @@ namespace Web.Repositories
             return prices;
         }
 
+        /// <summary>
+        /// Get a limited resultset based on <paramref name="pager"/>
+        /// </summary>
+        /// <param name="pager"></param>
+        /// <returns></returns>
         public async Task<IList<Price>> GetPaginatedAsync(Paging pager)
         {
             var prices = await context.Prices
@@ -46,6 +70,10 @@ namespace Web.Repositories
             return prices;
         }
 
+        /// <summary>
+        /// Get all rows
+        /// </summary>
+        /// <returns></returns>
         public async Task<IList<Price>> GetAllAsync()
         {
             var prices = await context.Prices
@@ -54,6 +82,11 @@ namespace Web.Repositories
             return prices;
         }
 
+        /// <summary>
+        /// Locate specific row
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Price> FindAsync(int id)
         {
             var price = await context.Prices
@@ -63,19 +96,24 @@ namespace Web.Repositories
             return price;
         }
 
+        /// <summary>
+        /// Get an optimized resultset for <paramref name="sku"/>
+        /// </summary>
+        /// <param name="sku"></param>
+        /// <returns></returns>
         public async Task<List<Price>> GetPricesPerMarket(string sku)
         {
             List<Price> prices = [];
 
-            // Gruppera efter MarketId och CurrencyCode för att
-            // hantera varje marknad och valuta separat
+            // Group on MarketId and CurrencyCode to handle each
+            // market and currency separatly
             var results = await context.Prices.Where(x => x.SKU == sku)
                                .GroupBy(p => new { p.MarketId, p.CurrencyCode })
                                .ToListAsync();
 
             foreach (var group in results)
             {
-                // Skapa unika tidsgränser för denna marknad och valuta
+                // Create unique periods for this market and currency
                 var periods = new SortedSet<DateTime>();
                 foreach (var price in group)
                 {
@@ -86,16 +124,13 @@ namespace Web.Repositories
                     }
                 }
 
-                // Iterera över delperioderna för att få lägsta pris
-                var periodArray = periods.ToArray();
+                // Iterate over period to find the lowest price
                 for (int i = 0; i < periods.Count; i++)
-                //for (int i = 0; i < periodArray.Length; i++)
                 {
                     DateTime start = periods.ElementAtOrDefault(i);
-                    //DateTime start = periodArray[i];
-                    DateTime end = periodArray.ElementAtOrDefault(i + 1);
+                    DateTime end = periods.ElementAtOrDefault(i + 1);
 
-                    // Hämta det lägsta priset som är giltigt för denna delperiod
+                    // Get the lowest price that is valid for this period
                     var validPrice = group.Where(p =>
                                             p.ValidFrom <= start
                                             && (!p.ValidUntil.HasValue

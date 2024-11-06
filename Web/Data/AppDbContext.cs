@@ -36,6 +36,10 @@ namespace Web.Data
                             => Seeder.RunAsync(ctx, _, GetPrices, token));
         }
 
+        /// <summary>
+        /// Read CSV file and return as array of objects
+        /// </summary>
+        /// <returns></returns>
         static Price[] GetPrices()
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,

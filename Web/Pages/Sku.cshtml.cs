@@ -11,7 +11,7 @@ namespace Web.Pages
         public string SKU { get; set; }
         public List<Price> Prices { get; set; }
 
-        async public Task OnGetAsync(string sku)
+        public async Task OnGetAsync(string sku)
         {
             SKU = sku;
             Prices = await repository.GetPricesPerMarket(SKU);

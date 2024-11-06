@@ -10,7 +10,7 @@
     public partial class CSVConverter
     {
 #nullable enable
-        private static string ReplaceSeparators(string? text)
+        static string ReplaceSeparators(string? text)
         {
             if (text is null || text.Equals("NULL", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -18,11 +18,11 @@
             }
             if (text.Contains(',') && text.Contains('.'))
             {
-                text = text.Replace(",", "").Replace('.', ',');
+                return text.Replace(",", "").Replace('.', ',');
             }
             else if (text.Contains('.'))
             {
-                text = text.Replace('.', ',');
+                return text.Replace('.', ',');
             }
             return text;
         }
@@ -40,7 +40,9 @@
                 text = ReplaceSeparators(text);
 
                 if (text == "")
+                {
                     text = "0";
+                }
 
                 numeric = Convert.ToInt32(IsNumericRegex().Match(text).Value);
             }
@@ -60,7 +62,9 @@
                 text = ReplaceSeparators(text);
 
                 if (text == "")
+                {
                     text = "0";
+                }
 
                 numeric = Convert.ToDecimal(text);
             }
