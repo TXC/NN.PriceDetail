@@ -26,8 +26,8 @@ Instructions on setting up this project locally.
 2. Edit `DefaultConnection` in `.\Web\appsettings.json`
 3. Run the migration
    ```sh
-  dotnet ef database update --project .\Web\Web.csproj
-  ```
+   dotnet ef database update --project .\Web\Web.csproj
+   ```
 4. Run the application
    ```sh
    dotnet run --project .\Web\Web.csproj
